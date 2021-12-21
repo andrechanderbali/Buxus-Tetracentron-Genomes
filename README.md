@@ -1,11 +1,13 @@
 # Buxus-Tetracentron-Genomes
 ## Scripts and command-line arguments
 ### Genome Assembly
-
+##### assemble PacBio reads with parameters specified in pb-asm.cfg
 ```
-fc_run.py pb-asm.cfg # assembly
-
-fc_unzip.py pb-unzip.cfg # phase and polish
+fc_run.py pb-asm.cfg 
+```
+##### phase and polish assembly with parameters specified in pb-unzip.cfg
+```
+fc_unzip.py pb-unzip.cfg 
 ```
 
 ## Genome Annotation
