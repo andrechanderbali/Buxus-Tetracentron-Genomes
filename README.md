@@ -10,9 +10,9 @@ fc_unzip.py pb-unzip.cfg # phase and polish
 
 ## Genome Annotation
 
-### annotate using evidence from transcriptome assemblies, reference proteins and a custom repeat library
+### masking and evidence-based annotation using transcriptomes, reference proteins, and repeat library
 ```
-maker --genome Genome.fsa evidence_maker_opts.ctl -cpus 24
+maker --genome Genome.fsa evidence_maker_opts.ctl
 ```
 #### evidence_maker_opts.ctl settings
 ```
@@ -49,9 +49,9 @@ busco --in Genome.evidence.transcripts1000.fasta --out rnd1_Augustus --lineage e
 
 mv run_rnd1_Augustus/augustus_output/retraining_parameters/* Genome.augustus.1
 ```
-### Run maker with trained predictors
+### annotation of masked assembly with trained predictors
 ```
-maker --genome Genome.fsa predict_maker_opts.ctl -cpus 24
+maker --genome Genome.fsa predict_maker_opts.ctl
 ```
 #### predict_maker_opts.ctl settings
 ```
