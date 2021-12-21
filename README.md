@@ -3,15 +3,9 @@
 ### Genome Assembly
 
 ```
-fc_run.py pb-asm.cfg
-```
+fc_run.py pb-asm.cfg # assembly
 
-### phase and polish
-```
-fc_unzip.py pb-unzip.cfg 
-```
-
-#### pb-unzip.cfg
+fc_unzip.py pb-unzip.cfg # phase and polish
 ```
 
 ## Genome Annotation
