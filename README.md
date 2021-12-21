@@ -49,7 +49,7 @@ busco --in Genome.evidence.transcripts1000.fasta --out rnd1_Augustus --lineage e
 
 mv run_rnd1_Augustus/augustus_output/retraining_parameters/* Genome.augustus.1
 ```
-### annotation of masked assembly with trained predictors
+### annotation of masked assembly with trained predictors and previosly generated evidence-based gffs
 ```
 maker --genome Genome.fsa predict_maker_opts.ctl
 ```
