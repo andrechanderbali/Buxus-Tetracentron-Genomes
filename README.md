@@ -110,7 +110,7 @@ do
         rm $f.trim2
 done
 ```
-### Strip gene IDs from fasta header and rename files for FASCONCAT
+### Format alignment files for FASCONCAT - strip gene IDs from species names in fasta header and append .fas suffix to file names 
 ```
 for file in alignments/*.pep.mafft.p2n.trimal; do awk -F"|" '{print $1}' $file > $file.fas; done
 ```
