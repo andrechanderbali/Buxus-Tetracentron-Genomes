@@ -88,15 +88,15 @@ TransDecoder.Predict -t trinity_out_Species.Trinity.fasta
 
 ## Phylogenetic analyses
 
-### align protein sequences with MAFFT:
+### alignment of protein sequences with MAFFT:
 ```
 mafft --localpair --maxiterate 1000 --thread 1 $file.pep > $file.pep.mafft
 ```
-### Convert protein alignments to cdna alignments:
+### Conversion of protein alignments to cdna alignments:
 ```
-pal2nal.v14/pal2nal.pl $file.pep.mafft $file.cdna -output fasta > $file.pep.mafft.p2n
+pal2nal.pl $file.pep.mafft $file.cdna -output fasta > $file.pep.mafft.p2n
 ```
-### trim alignments with trimAl
+### refine alignments with trimAl
 ```
 for f in alignments/*.pep.mafft.p2n
 
