@@ -110,35 +110,36 @@ do
         rm $f.trim2
 done
 ```
-### Format alignment files for FASCONCAT - strip gene IDs from species names in fasta header and append .fas suffix to file names 
+### Format alignment files for coalescence and concatenation phylogenetic data sets 
+#### strip gene IDs from species names in fasta header and append .fas suffix to file names 
 ```
 for file in alignments/*.pep.mafft.p2n.trimal; do awk -F"|" '{print $1}' $file > $file.fas; done
 ```
-### generate supermatrix and corresponding partition files
+#### generate supermatrix and corresponding partition files
 ```
 perl ~/bin/FASconCAT-G_v1.02.pl -l -l -s 
 ```
-### RAxML with 1000 bootstrap replicates for individual alignments
+#### RAxML with 1000 bootstrap replicates for individual alignments
 ```
 for file in alignments/*.trimal.fas
 do
 raxmlHPC-PTHREADS-SSE3 -s $file -f a -m GTRGAMMA -p $RANDOM -# 1000 -T 10 -x $RANDOM -n $file
 done
 ```
-### ASTRAL to generate coalescence-based tree from individual gene trees
+#### ASTRAL to generate coalescence-based tree from individual gene trees
 ```
 cat alignments/RAxML_bipartitions.* > cat.RAxML_bipartitions.genetrees #concatenate gene trees
 astral -i cat.RAxML_bipartitions.genetrees -t 1 -o gene.Astral.tre
 ```
-### RAxML with partitioned supermatrix and 1000 bootstrap replicates 
+#### RAxML with partitioned supermatrix and 1000 bootstrap replicates 
 ```
 raxmlHPC-PTHREADS-SSE3 -s alignment.supermatrix.fas -q alignment.supermatrix_partition.txt -f a -m GTRGAMMA -p $RANDOM -# 1000 -x 1234 -T 8 -n alignment.partition.supermatrix
 ```
-###  MRBAYES with partitioned supermatrix 
+####  MRBAYES with partitioned supermatrix 
 ```
 mpiexec -np 1 mb alignment.supermatrix_partition.nex
 ```
-### IQ-Tree with 1000 bootstrap replicates for individual orthogroups alignments
+#### IQ-Tree with 1000 bootstrap replicates for individual orthogroups alignments
 ```
 for file in Orthogroup_alignments/*pep.mafft.p2n.trimal
 do
