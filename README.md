@@ -104,8 +104,52 @@ TransDecoder.Predict -t trinity_out_Species.Trinity.fasta
 ```
 
 ## Phylogenetic analyses
+### Build data sets
+#### Angiosperms353
+```
 
-### align protein sequences with MAFFT:
+#This script is modified from https://github.com/HeatherKates/GenomicDataforPhylo/blob/master/Blast_to_seqs.bash
+#It uses blast to extract a set of target loci (queries) from a set of proteomes (in a dir called proteomes).
+#The output is one file per proteome that contains the best blast hit per query.
+ 
+#loop through a set of proteomes in a dir 
+for i in path/to/proteomes/*.pep
+do
+#make blastdb (comment next line out if db already exists)
+makeblastdb -dbtype prot -in $i -parse_seqids
+#Set variable $Organism equal to the basename of the proteome file.
+Organism=$(basename $i .pep)
+#blast a list of target sequences (in Queries.fasta, change name if needed) against db
+blastp -db $i -query path/to/Amborella.Angiosperms353.FAA -outfmt 6 -max_target_seqs 1 > $Organism.bls
+#"get best blast hits per query"
+perl get_best_blast_results.pl 1 $Organism.bls $Organism.bls.best
+#convert blast table (-outfmt 6) to bed file format
+grep -v '^#' ${Organism}.bls.best | perl -ane 'if($F[8]<=$F[9]){print join("\t",$F[1],$F[8]-1,$F[9],$F[0],"0","+"),"\n";}else{print join("\t",$F[1],$F[9]-1,$F[8],$F[0],"0","-"),"\n";}' | sort >> $Organism.bed
+#use bedtools to extract the best blast hit sequence from the proteomes.
+bedtools getfasta -s -name -fi path/to/$Organism.pep -bed $Organism.bed -fo $Organism.target_loci.fasta
+#add the organism name to the headers
+sed -i "s/>/>${Organism}_/g" $Organism.target_loci.fasta
+done
+```
+#### BUSCOs
+```
+#find all full length single copy BUSCOs in folder of busco_runs 
+for file in $(find ./busco_runs -name "full_table_*.tsv"); do grep -v "^#" $file | awk '{if ($2 == "Complete") print $3 >> $1}'; done
+mv EOG0* complete_buscos/
+cd complete_buscos
+
+#get fastas of genes for each BUSCO
+for file in $(find . -name "EOG0*"); do perl extractFromFasta.pl allproteomes.fasta list $file > $file.pep; done
+
+```
+#### Orthofinder
+```
+#run full OrthoFinder analysis on FASTA format proteomes in <dir>
+orthofinder -f proteomes_for_Orthofinder -M msa -T fasttree -S blast
+
+```
+
+### Align protein sequences with MAFFT:
 ```
 mafft --localpair --maxiterate 1000 --thread 1 $file.pep > $file.pep.mafft
 ```
@@ -164,7 +208,7 @@ do
 iqtree2 -s $file -B 1000 -m TEST -mset raxml -T AUTO
 done
 ```
-### Run ASTRAL-Pro on Orthogroup trees
+#### Run ASTRAL-Pro on Orthogroup trees
 ```
 strip "|sequenceID" from newick trees leaving species names 
 
